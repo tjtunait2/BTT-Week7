@@ -1,5 +1,7 @@
 package Model;
 
+import com.mysql.cj.Session;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -11,27 +13,26 @@ public class BookDAO {
     private Connection connection = JDBC.getConnectDatabase();
 
     public List<Book> getBooksFromName(String name) {
-        List<Book> listSearchBook = new ArrayList<>();
+        String query = "select * from book where name LIKE '%" + name + "%'";
+        List<Book> listBooks = new ArrayList<>();
+
         try {
-            String sqlSelect = "select * from book" + " where name = " + "'" + name + "'";
-            PreparedStatement stmt = (PreparedStatement) connection.prepareStatement(sqlSelect);
-            ResultSet rs = stmt.executeQuery();
+            PreparedStatement ps = connection.prepareStatement(query);
+
+            ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                listSearchBook.add(new Book(
+                listBooks.add(new Book(
                         rs.getInt("id"),
                         rs.getString("name"),
                         rs.getString("publisher"),
                         rs.getInt("price")
                 ));
             }
-
-            stmt.close();
-            connection.close();
+            return listBooks;
         } catch (SQLException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
+            return null;
         }
-        return listSearchBook;
     }
     public void addBook(Book book) {
         String query = "insert into book(name, publisher, price) " +

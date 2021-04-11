@@ -83,7 +83,7 @@
     </a>
 </div>
 <div class="search-container">
-    <form action="search" method="GET">
+    <form action="" method="GET">
         <input type="text" placeholder="Enter book name..." name="name-search">
         <button type="submit">Search</button>
     </form>
@@ -96,7 +96,8 @@
             <th>Publisher</th>
             <th>Price</th>
         </tr>
-        <% List<Book> listBooks = (List<Book>) request.getAttribute("listBook"); %>
+        <jsp:include page="/get-all-books"/>
+        <% List<Book> listBooks = (List<Book>) request.getAttribute("bookList"); %>
         <% if (listBooks != null) { %>
         <% for (Book book : listBooks) { %>
         <tr>
@@ -112,7 +113,7 @@
                 <a href="editBook.jsp?id=<%=book.getId()%>">Edit</a>
             </td>
             <td>
-                <a href="/update?id=<%=book.getId()%>">Delete</a>
+                <a href="/delete?id=<%=book.getId()%>">Delete</a>
             </td>
         </tr>
         <% } %>
